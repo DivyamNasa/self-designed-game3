@@ -6,7 +6,14 @@ var idleknight;
 var runknight;
 var jumpknight;
 var leftrunknight,leftidle;
-
+var life=5;
+var lifei1,lifei2,lifei3,lifei4,lifei5;
+var zlife=3;
+var zh1,zh3;
+var zh2;
+var C=1;
+var Z=1
+var k=1;
 var gameState;
 var tile1,tile11,tile2,tile3,tile4,tile5,tile6,tile7,tile8;
 var tile1img,tile2img,tile3img,tile4img,tile5img,tile6img,tile7img,tile8img;
@@ -30,11 +37,26 @@ var stone,stoneimg;
 var treasure ,tropenimg,trclosedimg;
 var attack,attackanimation;
 var zombie,zombieanimation,zombieleft;
+var zombie1;
 var Play=1;
 var End=0;
 var gameState=Play;
 var edges;
 var invisible1,invisible2;
+var lifeimg;
+var A=1;
+var leftattack
+var B=1;
+var zlimg;
+var in2;
+var gameover
+var gr;
+var zl1,zl2,zl3
+var winner,winimg;
+var start,startimg
+var bgmusic;
+var winnigmusic;
+var endmusic
 
 function preload() {
 
@@ -72,11 +94,83 @@ tropenimg=loadImage("treasure/open.png");
 attackanimation=loadAnimation("Attack3/HeroKnight_Attack3_0.png","Attack3/HeroKnight_Attack3_1.png","Attack3/HeroKnight_Attack3_2.png","Attack3/HeroKnight_Attack3_3.png","Attack3/HeroKnight_Attack3_4.png","Attack3/HeroKnight_Attack3_5.png","Attack3/HeroKnight_Attack3_5.png","Attack3/HeroKnight_Attack3_6.png","Attack3/HeroKnight_Attack3_7.png",)
 zombieanimation=loadAnimation("zombiewalk/walk (1).png","zombiewalk/walk (2).png","zombiewalk/walk (3).png","zombiewalk/walk (4).png","zombiewalk/walk (5).png","zombiewalk/walk (6).png","zombiewalk/walk (7).png","zombiewalk/walk (8).png","zombiewalk/walk (9).png","zombiewalk/walk (10).png","zombiewalk/walk (11).png","zombiewalk/walk (12).png","zombiewalk/walk (13).png","zombiewalk/walk (14).png",);
 zombieleft=loadAnimation("zombieleft/walk (1).png.png","zombieleft/walk (2).png.png","zombieleft/walk (3).png.png","zombieleft/walk (4).png.png","zombieleft/walk (5).png.png","zombieleft/walk (6).png.png","zombieleft/walk (7).png.png","zombieleft/walk (8).png.png","zombieleft/walk (9).png.png","zombieleft/walk (10).png.png","zombieleft/walk (11).png.png","zombieleft/walk (12).png.png","zombieleft/walk (13).png.png","zombieleft/walk (14).png.png");
+lifeimg=loadImage("heart.png")
+leftattack=loadAnimation("attackleft/HeroKnight_Attack3_0.png.png","attackleft/HeroKnight_Attack3_1.png.png","attackleft/HeroKnight_Attack3_3.png.png","attackleft/HeroKnight_Attack3_4.png.png","attackleft/HeroKnight_Attack3_5.png.png","attackleft/HeroKnight_Attack3_6.png.png","attackleft/HeroKnight_Attack3_7.png.png")
+zlimg=loadImage("finallifeimg.png");
+gameover=loadImage("gameover.png")
+winimg=loadImage("winning .png")
+startimg=loadImage("start screen.png");
+
+bgmusic=loadSound("bgmusic.mp3");
+winningmusic=loadSound("winsound.wav");
 }
 
 
 function setup(){
     createCanvas(windowWidth, windowHeight);
+
+
+  
+//in12
+in1=createSprite(1357,60,10,120)
+in1.visible=false;
+in2=createSprite(1110,60,10,128)
+in2.visible=false;
+
+//zombielifeimg
+
+zh1=createSprite(1050,21)
+zh1.addImage(zlimg)
+zh1.scale=0.05;
+
+zh2=createSprite(1085,21)
+zh2.addImage(zlimg)
+zh2.scale=0.05;
+
+zh3=createSprite(1120,21)
+zh3.addImage(zlimg)
+zh3.scale=0.05;
+
+zl1=createSprite(1050,21)
+zl1.addImage(zlimg)
+zl1.scale=0.05;
+zl1.visible=false;
+
+zl2=createSprite(1085,21)
+zl2.addImage(zlimg)
+zl2.scale=0.05;
+zl2.visible=false;
+
+zl3=createSprite(1120,21)
+zl3.addImage(zlimg)
+zl3.scale=0.05;
+zl3.visible=false;
+
+// creating lifeimg
+lifei1=createSprite(122,21)
+lifei1.addImage(lifeimg)
+lifei1.scale=0.1;
+
+lifei2=createSprite(152,21)
+lifei2.addImage(lifeimg)
+lifei2.scale=0.1;
+
+lifei3=createSprite(182,21)
+lifei3.addImage(lifeimg)
+lifei3.scale=0.1;
+
+lifei4=createSprite(212,21)
+lifei4.addImage(lifeimg)
+lifei4.scale=0.1;
+
+lifei5=createSprite(242,21)
+lifei5.addImage(lifeimg)
+lifei5.scale=0.1;
+
+
+
+
+
 
   //creating invisible lines
   invisible1=createSprite(371,445,10,80)
@@ -84,7 +178,7 @@ function setup(){
 invisible1.visible=false;
 invisible2.visible=false;
 
-   if(gameState===Play){
+ 
 
   edges = createEdgeSprites();
 
@@ -92,15 +186,11 @@ invisible2.visible=false;
     underwater.addImage(underwaterimg)
     
 
-    topwater=createSprite(310,654,20,50);
-    topwater.addImage(topwaterimg)
 
     underwater1=createSprite(930,704,20,20);
     underwater1.addImage(underwaterimg)
-    
 
-    topwater1=createSprite(930,654,20,20);
-    topwater1.addImage(topwaterimg)
+
 
 
 //boxes
@@ -255,13 +345,26 @@ box5.scale=0.7
   knight.scale=2.5;
   knight.setCollider("rectangle",0,5,20,37);
 tree.scale=0.5;
+//knight.debug=true;
 
 //zombie
 zombie=createSprite(200,80)
 zombie.addAnimation("walk",zombieanimation)
-zombie.debug=true;
+//zombie.debug=true;
 zombie.setCollider("rectangle",-10,11,50,108);
 zombie.velocityX=4
+
+//water
+topwater=createSprite(310,654,20,50);
+topwater.addImage(topwaterimg)
+
+topwater.setCollider("rectangle",0,40,50,10);
+
+
+topwater1=createSprite(930,654,20,20);
+topwater1.addImage(topwaterimg)
+topwater1.setCollider("rectangle",0,40,50,10);
+//topwater1.debug=true;
 
 //tiles
 
@@ -324,20 +427,38 @@ zombie.velocityX=4
   smallcenterup2=createSprite(1010,270);
   smallcenterup2.addImage(fifteen);
   smallcenterup2.scale=0.7
-   }
 
+  gr = createSprite(690,370)
+  gr.addImage(gameover);
+  gr.scale=0.34
+  gr.visible=false;
+
+//winning sprite
+winner=createSprite(682,345);
+winner.addImage(winimg);
+winner.scale=0.987
+winner.visible=false;
+
+//starting image
+starti=createSprite(685,350)
+starti.addImage(startimg);
 
 }
+
+
+
+
 
 function draw(){ 
  background(backgroundImg);
 
-
-if(gameState===Play){
-  textSize(25)
-fill("white")
-  text(mouseX+","+ mouseY,mouseX,mouseY)
   
+  //textSize(25)
+//ill("white")
+  //text(mouseX+","+ mouseY,mouseX,mouseY)
+  
+
+  //knightcontrol
 
 if(knight.y>=464){
   if(keyDown("space")){
@@ -358,26 +479,44 @@ if(keyDown("space")){
 if(keyWentDown("LEFT_ARROW")){
 knight.velocityX=-3
 knight.addAnimation("idle",leftrunknight);
+B=2;
 }
 if(keyWentUp("LEFT_ARROW")){
 knight.velocityX=0
   knight.addAnimation("idle",leftidle);
+  
 }
 
 if(keyWentDown("Right_ARROW")){
+  starti.visible=false;
   knight.velocityX=3
   knight.addAnimation("idle",runknight);
+  B=1;
+  bgmusic.play();
+  
   }
   if(keyWentUp("Right_ARROW")){
   knight.velocityX=0
     knight.addAnimation("idle",idleknight);
   }
 
+//knightattack
+
   if(keyWentDown("UP_ARROW")){
+    
     knight.addAnimation("idle",attackanimation);
+    knight.setCollider("rectangle",10,5,35,37);
+    A=2;
+    
+    if(B===2){
+      knight.addAnimation("idle",leftattack);
+      knight.setCollider("rectangle",-10,5,35,37);
+    }
     }
     if(keyWentUp("UP_ARROW")){
+      knight.setCollider("rectangle",0,5,20,37);
       knight.addAnimation("idle",idleknight);
+     A=1;
     }
 
     //moving zombie
@@ -390,18 +529,183 @@ if(keyWentDown("Right_ARROW")){
       zombie.addAnimation("walk",zombieanimation);
     }
 
+if(knight.collide(zombie)) {
+if(A!==2){
+  life=life-1;
+  if(life===4){
+    lifei5.visible=false;
+  }
+  if(life===3){
+    lifei4.visible=false;
+  }
+  if(life===2){
+    lifei3.visible=false;
+  }
+  if(life===1){
+    lifei2.visible=false;
+  }
+  if(life===0){
+    lifei1.visible=false;
+    gameState=End
+    
+   // zombie1.visible=false;
+  }
+
+  }
+  if(A===2){
+    zlife=zlife-1;
+
+    if(zlife===2){
+      zh1.visible=false;
+    }
+
+    if(zlife===1){
+      zh2.visible=false;
+    }
+
+    if(zlife===0){
+      zh3.visible=false;
+      
+    }
+ 
+  
+  }
+}
+
+
+if(zlife===0){
+  zombie.destroy();
+  zl1.visible=true;
+zl2.visible=true;
+zl3.visible=true;
+zlife=3
+if(C!==2){
+  zombie1=createSprite(1184,56)
+}
+zombie1.addAnimation("walk",zombieanimation)
+zombie1.setCollider("rectangle",-10,11,50,108);
+zombie1.velocityX=4
+zlife=5;
+C=2
+
+}
+
+
+
+console.log("life : " + life);
+
+if(C===2){
+  zombie1.velocityY=zombie1.velocityY+0.5;
+  zombie1.collide(righcornerup1);
+zombie1.collide(righcornerup2);
+zombie1.collide(righcornerup3);
+zombie1.collide(righcornerup4);
+//zombie1.collide(righcornerup4);
+zombie1.setCollider("rectangle",-10,11,50,108);
+//zombie1.bounceOff(in1);
+//zombie1.bounceOff(in2);
+
+if(keyWentDown("UP_ARROW")){
+    
+  knight.addAnimation("idle",attackanimation);
+  knight.setCollider("rectangle",10,5,35,37);
+  A=2;
+  
+  if(B===2){
+    knight.addAnimation("idle",leftattack);
+    knight.setCollider("rectangle",-10,5,35,37);
+  }
+  }
+  if(keyWentUp("UP_ARROW")){
+    knight.setCollider("rectangle",0,5,20,37);
+    knight.addAnimation("idle",idleknight);
+   A=1;
+  }
+
+if(zombie1.collide(in1)){
+  zombie1.velocityX=-3
+  zombie1.addAnimation("walk",zombieleft);
+}
+
+if(zombie1.collide(in2)){
+  zombie1.velocityX=3
+  zombie1.addAnimation("walk",zombieanimation);
+  
+}
+
+
+
+if(knight.collide(zombie1)) {
+  if(A!==2){
+    console.log("check1")
+    life=life-1;
+    if(life===4){
+      lifei5.visible=false;
+    }
+    if(life===3){
+      lifei4.visible=false;
+    }
+    if(life===2){
+      lifei3.visible=false;
+    }
+    if(life===1){
+      lifei2.visible=false;
+    }
+    if(life===0){
+      lifei1.visible=false;
+      gameState=End
+      zombie1.visible=false;
+    }
+  
+    }
+    if(A===2){
+      console.log("check2")
+      zlife=zlife-1;
+  
+      if(zlife===2){
+        zl1.visible=false;
+      }
+  
+      if(zlife===1){
+        zl2.visible=false;
+      }
+  
+      if(zlife===0){
+        zl3.visible=false;
+    
+        zombie1.visible=false;
+        zombie1.x=110001;
+        k=2;
+        //gameState=End;
+      }
+   
+    
+    }
+  }
+
+}
+
 knight.velocityY=knight.velocityY+0.5;
 
 zombie.velocityY=zombie.velocityY+0.5;
 
-
-if(knight.collide(treasure)){
-treasure.visible=false;
-treasure=createSprite(1300,100)
-treasure.addImage(tropenimg);
-gameState=End;
+if(knight.collide(topwater)||knight.collide(topwater1)){
+gameState=End
 }
 
+
+if(knight.collide(treasure)&&k===2){
+  bgmusic.stop();
+  winningmusic.play();
+  treasure.addImage(tropenimg);
+treasure.visible=false;
+//treasure=createSprite(1300,100)
+winner.visible=true;
+//gameState=End;
+}
+
+console.log("zombielife : "+zlife);
+console.log(A);
 
 knight.collide(edges[0])
 knight.collide(edges[1])
@@ -479,18 +783,44 @@ zombie.collide(box1);
 zombie.collide(box2);
 zombie.collide(box3);
 //zombie.collide(box4);
-}
+
+
+
+
 
 if(gameState===End){
-background(BG1.png)
+  //background(gameover.png)
+  knight.visible=false;
+//zombie1.visible=false;
+gr.visible=true;
+treasure.visible=false;
+bgmusic.stop();
 
-}
 
+
+
+
+
+
+
+
+  }
 
 
     drawSprites();
+
+    if(gameState===End){
+      textSize(30);
+      fill("lightblue")
+      text("Press CTRL+R to restart",1000,670);
+    
+
+        }
+
+      }
+    
  
-}
+
 
 
 
